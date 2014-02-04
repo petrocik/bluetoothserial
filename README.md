@@ -6,6 +6,10 @@ Connections are automatically reestablished if the connection is lost.  Add Loca
 
 When the bluetooth slave device moves out of range the BluetoothSerial class automatically attempts to reconnects.  After 30 failed attempts the class sends a BLUETOOTH_FAILED message.  To reconnect when the device is in range call BluetoothSerial.connect().
   
+Originally developed to work with the HC-06 and HC-05 bluetooth modules found on ebay.  However any Serial Port Profile (SPP) bluetooth device should work.
+
+Due to the nature of serial communication there is nothing to ensure the complete serial of bytes has arrived.  So it is best to structure your communication protocol in such a way that you know when all the bytes of a message have arrived.  The BluetoothSerial class handles buffering bytes until complete message arrives. This is the reason you must return the number of byte read in the MessageHandler.read method. In the read method wrote you logic to read the data, if the message is incomplete just return 0.  When read is called again after move data arrives check again to see if all data has arrived and then consume the bytes.  Return the number of bytes consumer and BluetoothSerial will buffer the un-consumed bytes until the remaining bytes arrive.  To ignore bytes in the buffer return the number of bytes to skip and the buffer will drop those bytes.  
+
 
 ## Usage
 
