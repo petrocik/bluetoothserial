@@ -1,14 +1,10 @@
 # Android Bluetooth Serial 
 
-Class wraps all the Android bluetooth internals needed to establish and maintain a serial communication with bluetooth.  
-Uses a callback to send data receive via bluetooth to your activity.  You just need to implement the BluetoothSerial.MessageHanler
- callback.  The example below does it using an anonymous inner class.
+Class wraps all the Android bluetooth internals needed to establish and maintain a serial communication with bluetooth.  Uses a callback to send data receive via bluetooth to your activity.  You just need to implement the BluetoothSerial.MessageHanler callback.  The example below does it using an anonymous inner class.
 
-Connections are automatically reestablished if the connection is lost.  Add LocalBroadcastManager registerReceiver to your activity 
-to be notified when the connection is lost and/or reestablished.
+Connections are automatically reestablished if the connection is lost.  Add LocalBroadcastManager registerReceiver to your activity to be notified when the connection is lost and/or reestablished.
 
-When the bluetooth slave device moves out of range the BluetoothSerial class automatically attempts to reconnects.  After 30
-failed attempts the class sends a BLUETOOTH_FAILED message.  To reconnect when the device is in range call BluetoothSerial.connect().
+When the bluetooth slave device moves out of range the BluetoothSerial class automatically attempts to reconnects.  After 30 failed attempts the class sends a BLUETOOTH_FAILED message.  To reconnect when the device is in range call BluetoothSerial.connect().
   
 
 ## Usage
