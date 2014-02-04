@@ -1,4 +1,4 @@
-package org.psoft.android.bluetooth;
+package com.bmxgates.logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +53,8 @@ public class BluetoothSerial {
 	
 	AsyncTask<Void, Void, BluetoothDevice> connectionTask;
 	
+	String devicePrefix;
+	
 	/**
 	 * Listens for discount message from bluetooth system and restablishing a connection
 	 */
@@ -78,10 +80,10 @@ public class BluetoothSerial {
 		}
 	};
 	
-	public BluetoothSerial(Context context, MessageHandler messageHandler){
+	public BluetoothSerial(Context context, MessageHandler messageHandler, String devicePrefix){
 		this.context = context;
-		
 		this.messageHandler = messageHandler;
+		this.devicePrefix = devicePrefix;
 	}
 
 	public void onPause() {
@@ -96,6 +98,9 @@ public class BluetoothSerial {
 		//reestablishes a connection is one doesn't exist
 		if(!connected){
 			connect();
+		} else {
+			Intent intent = new Intent(BLUETOOTH_CONNECTED);
+			LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 		}
 	}
 
@@ -112,16 +117,17 @@ public class BluetoothSerial {
 			Log.e(BMX_BLUETOOTH,"Connection request while already connected");
 			return;
 		}
-		
+
+		if (connectionTask != null && connectionTask.getStatus()==AsyncTask.Status.RUNNING){
+			Log.e(BMX_BLUETOOTH,"Connection request while attempting connection");
+			return;
+		}
+
 		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (bluetoothAdapter== null || !bluetoothAdapter.isEnabled()) {
 			return;
 		}
 
-		//cancel any running task
-		if (connectionTask != null)
-			connectionTask.cancel(true);
-		
 		final List<BluetoothDevice> pairedDevices = new ArrayList<BluetoothDevice>(bluetoothAdapter.getBondedDevices());
 		if (pairedDevices.size() > 0) {
 			bluetoothAdapter.cancelDiscovery();
@@ -140,7 +146,7 @@ public class BluetoothSerial {
 					while(!isCancelled()){ //need to kill without calling onCancel
 
 						for (BluetoothDevice device : pairedDevices) {
-							if (device.getName().toUpperCase().startsWith("HC-0")){
+							if (device.getName().toUpperCase().startsWith(devicePrefix)){
 								Log.i(BMX_BLUETOOTH, attemptCounter + ": Attempting connection to " + device.getName());
 
 								try {
@@ -175,11 +181,8 @@ public class BluetoothSerial {
 							attemptCounter++;
 							if (attemptCounter>MAX_ATTEMPTS)
 								this.cancel(false);
-							
-							if (attemptCounter<15)
+							else
 								Thread.sleep(1000);
-							else 
-								Thread.sleep(5000);
 						} catch (InterruptedException e) {
 							break;
 						}
