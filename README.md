@@ -1,6 +1,8 @@
+# Forked! Active developement is now at https://github.com/jpetrocik/bluetoothserial
+
 # Android Bluetooth Serial 
 
-Class wraps all the Android bluetooth internals needed to establish and maintain a serial communication with bluetooth.  Uses a callback to send data receive via bluetooth to your activity.  You just need to implement the BluetoothSerial.MessageHanler callback.  The example below does it using an anonymous inner class.
+Class wraps all the Android bluetooth internals needed to establish and maintain a bidirectional serial communication with bluetooth.  Uses a callback to send data receive via bluetooth to your activity.  You just need to implement the BluetoothSerial.MessageHanler callback.  The example below does it using an anonymous inner class.
 
 Connections are automatically reestablished if the connection is lost.  Add LocalBroadcastManager registerReceiver to your activity to be notified when the connection is lost and/or reestablished.
 
@@ -42,7 +44,14 @@ Due to the nature of serial communication there is nothing to ensure the complet
 		}
 
 
+## Send data
 
+There are 3 different write methods are exposed, all the underlining SerialOutputStream write methods.
+
+
+		bluetoothSerial.write();
+
+		
 ## register receivers
 
 Receivers are used to receive connection events.  Often this is used to update the UI. 
