@@ -83,7 +83,7 @@ public class BluetoothSerial {
 	public BluetoothSerial(Context context, MessageHandler messageHandler, String devicePrefix){
 		this.context = context;
 		this.messageHandler = messageHandler;
-		this.devicePrefix = devicePrefix;
+		this.devicePrefix = devicePrefix.toUpperCase();
 	}
 
 	public void onPause() {
