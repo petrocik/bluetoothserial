@@ -42,6 +42,23 @@ Due to the nature of serial communication there is nothing to ensure the complet
 		}
 
 
+## Activity onPause method
+
+		protected void onPause() {
+			super.onPause();
+
+			// avoid leaking some stuff
+			bluetoothSerial.onPause();
+		}
+
+
+## To cleanup
+
+		{
+			bluetoothSerial.onPause();  // if not done yet
+			bluetoothSerial.close();
+		}
+
 
 ## register receivers
 
