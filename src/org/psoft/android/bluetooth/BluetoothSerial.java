@@ -336,6 +336,10 @@ public class BluetoothSerial {
 	public void close() {
 		
 		connected = false;
+
+		if (connectionTask != null) {
+			connectionTask.cancel(false);
+		}
 		
 		if (serialReader != null) {
 			serialReader.interrupt();
